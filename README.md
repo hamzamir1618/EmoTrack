@@ -1,132 +1,98 @@
-Here’s a clean, professional `README.md` that documents both:
+# EmoTrack
 
-* `split.py` — for splitting the dataset
-* `emotion_detection_classbalanced.ipynb` — for training the MobileNetV2 model with class balancing
+> **A real-time deep learning-based facial emotion recognition system powered by MobileNetV2.**
 
 ---
 
-### ✅ `README.md`
+## Overview
 
-```markdown
-# Emotion Detection using MobileNetV2
+**EmoTrack** is a machine learning pipeline that classifies human facial expressions into seven distinct emotions. By utilizing transfer learning with a pre-trained **MobileNetV2** architecture, the model is highly optimized for accuracy while remaining lightweight enough to perform live, real-time emotion detection via a standard webcam.
 
-This project uses the [FER-2013](https://www.kaggle.com/datasets/msambare/fer2013) facial emotion recognition dataset to train a deep learning model that can classify facial expressions into seven emotions using MobileNetV2.
+## Features
 
-## 📁 Dataset Preparation
+- [x] **Deep Transfer Learning:** Built on top of MobileNetV2, ensuring rapid training and high-performance inference.
+- [x] **Real-Time Webcam Inference:** Includes a standalone Python script to detect faces using OpenCV Haar Cascades and classify emotions on the fly.
+- [x] **Class-Balanced Training:** Handles dataset imbalances dynamically with class weighting strategies during the training phase.
+- [x] **Automated Data Splitting:** Provides utility scripts to cleanly divide raw datasets into `train`, `val`, and `test` splits (60/20/20).
+- [x] **Comprehensive Evaluation:** Generates confusion matrices and classification reports to evaluate model performance thoroughly.
 
-Ensure your dataset is structured into three folders inside `data/`:
+---
 
+## Supported Emotions
+
+The model is trained to recognize the following 7 core expressions:
+- **Angry**
+- **Disgust**
+- **Fear**
+- **Happy**
+- **Neutral**
+- **Sad**
+- **Surprise**
+
+---
+
+## Quick Start & Installation
+
+### 1. Prerequisites
+Ensure you have Python installed, then install the required dependencies:
+
+```bash
+pip install tensorflow opencv-python numpy scikit-learn matplotlib
 ```
 
+### 2. Dataset Preparation
+This project uses the [FER-2013](https://www.kaggle.com/datasets/msambare/fer2013) dataset (or similar structured datasets). First, place all your raw image data in emotion-labeled folders, then use the provided script to create train/val/test splits.
+
+```bash
+# Splits your dataset into a 60-20-20 ratio
+python split.py
+```
+
+Your data directory should now look like this:
+```text
 data/
 ├── train/
+│   ├── angry/
+│   ├── happy/
+│   └── ...
 ├── val/
 └── test/
-
 ```
 
-Each of these folders should contain **subfolders for each emotion**, e.g.:
+### 3. Model Training
+Open the Jupyter Notebook `emotion_detection_classbalanced.ipynb`. This notebook walks you through:
+- Loading and augmenting data via `ImageDataGenerator`.
+- Applying class weights for underrepresented emotions (like Disgust).
+- Fine-tuning the MobileNetV2 architecture.
+- Saving the compiled model to `emotion_mobilenet.h5`.
 
-```
+---
 
-train/
-├── angry/
-├── disgust/
-├── fear/
-├── happy/
-├── neutral/
-├── sad/
-└── surprise/
+## Real-Time Inference (Webcam)
 
-````
-
-### ⚙️ `split.py`
-
-This script splits the full dataset into `train`, `val`, and `test` folders using a **60-20-20 ratio**.
-
-#### Usage:
+Once you have trained your model (or downloaded the pre-trained `emotion_mobilenet.h5`), you can run the live webcam tracker!
 
 ```bash
-python split.py
-````
-
-* Make sure the original images are sorted into emotion-labeled folders before splitting.
-* Adjust the source path and output path inside the script if needed.
-
----
-
-## 🧠 Model Training
-
-### 📓 `emotion_detection_classbalanced.ipynb`
-
-This notebook:
-
-* Loads the dataset using `ImageDataGenerator`
-* Applies **data augmentation** for robustness
-* Uses **MobileNetV2** with transfer learning
-* Applies **class weighting** to handle data imbalance
-* Trains and validates the model
-* Evaluates on the test set using:
-
-  * Accuracy
-  * Classification report
-  * Confusion matrix
-* Supports **real-time webcam inference** with OpenCV
-
-#### Highlights:
-
-* Handles extreme class imbalance (e.g. `disgust` class is underrepresented)
-* Built with TensorFlow / Keras and OpenCV
-* Model is saved to disk as `emotion_mobilenet.h5`
-
----
-
-## 🖥️ Requirements
-
-Install the required libraries:
-
-```bash
-pip install tensorflow opencv-python scikit-learn matplotlib
+python webcamtest.py
 ```
 
----
-
-## 📷 Real-Time Inference
-
-Once the model is trained, the notebook uses your webcam to detect and classify facial expressions live.
-
-Press `Q` to quit the webcam window.
+- The script automatically detects faces using OpenCV's `haarcascade_frontalface_default.xml`.
+- Each detected face is cropped, pre-processed, and passed to MobileNetV2.
+- The predicted emotion and bounding box are drawn directly on your live video feed.
+- **Press `Q`** to exit the camera window.
 
 ---
 
-## 📂 Files
+## Project Structure
 
-| File                                    | Description                                    |
-| --------------------------------------- | ---------------------------------------------- |
-| `split.py`                              | Script to split original dataset into 60/20/20 |
-| `emotion_detection_classbalanced.ipynb` | Main training and evaluation notebook          |
-| `emotion_mobilenet.h5`                  | Saved trained model (after notebook execution) |
-
----
-
-## 🧠 Emotions Covered
-
-* 😠 Angry
-* 🤢 Disgust
-* 😱 Fear
-* 😄 Happy
-* 😐 Neutral
-* 😢 Sad
-* 😲 Surprise
+| File                                    | Description                                                                 |
+| --------------------------------------- | --------------------------------------------------------------------------- |
+| `split.py`                              | Data pipeline script for generating train/val/test splits.                  |
+| `emotion_detection_classbalanced.ipynb` | Core training notebook with augmentation, class weighting, and evaluation.  |
+| `webcamtest.py`                         | OpenCV-based script for real-time face tracking and emotion classification. |
+| `emotion_mobilenet.h5`                  | The compiled and trained Keras model (generated after training).            |
 
 ---
 
-## ✍️ Author
-
-This project was developed as part of the **KDD Summer 2025** initiative.
-
----
-
-
-
-
+## Author
+Developed as part of the **KDD Summer 2025** initiative.
